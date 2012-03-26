@@ -1,0 +1,154 @@
+#
+# Copyright (C) 2001-2011 Ideaworks3D Ltd.
+# All Rights Reserved.
+#
+# This document is protected by copyright, and contains information
+# proprietary to Ideaworks3D.
+# This file consists of source code released by Ideaworks3D under
+# the terms of the accompanying End User License Agreement (EULA).
+# Please do not use this program/source code before you have read the
+# EULA and have agreed to be bound by its terms.
+#
+errors
+callbacks
+
+include:
+
+#include "s3eTypes.h"
+
+#define S3E_SOUNDPOOL_MAX_VOLUME  0x100
+
+enum s3eSoundPoolError
+{
+    S3E_SOUNDPOOL_ERR_NONE          = 0,
+    S3E_SOUNDPOOL_ERR_PARAM         = 1,
+    S3E_SOUNDPOOL_ERR_TOO_MANY      = 2,
+    S3E_SOUNDPOOL_ERR_ALREADY_REG   = 3,
+};
+
+enum s3eSoundPoolCallback
+{
+    /**
+     * A handler function registered for this callback will be called when a
+     * sample has finished playing.
+     *
+     * Any callback created to respond to this event should conform to the
+     * following:
+     *
+     * @param systemData This is a pointer to #s3eSoundPoolEndSampleInfo.
+     */
+    S3E_SOUNDPOOL_STOP_AUDIO        = 0,
+
+    S3E_SOUNDPOOL_CALLBACK_MAX
+};
+
+struct s3eSoundPoolEndSampleInfo
+{
+    /**
+     * The ID of the sample that generated this callback.
+     */
+    int32    m_SampleId;
+};
+
+enum s3eSoundPoolProperty
+{
+    /**
+     * [read, write] Master sound volume. In .8 fixed point format, 0x100 (@ref
+     * S3E_SOUNDPOOL_MAX_VOLUME) represents maximum volume.
+     */
+    S3E_SOUNDPOOL_VOLUME            = 0,
+};
+
+enum s3eSoundPoolSampleProperty
+{
+    /**
+     * [read, write] Sound channel volume, in .8 fixed point format,
+     * @ref S3E_SOUNDPOOL_MAX_VOLUME(0x100) represents maximum volume. An attempt
+     * to set a volume greater than this will set a volume of
+     * @ref S3E_SOUND_MAX_VOLUME.  This has no effect of channels that use
+     * callbacks to generate audio data.
+     */
+    S3E_SOUNDPOOL_STREAM_VOLUME     = 0,
+    
+    /**
+     * [read] returns channel playing status.
+     * This is 1 if channel is playing, otherwise 0 (paused or stopped).
+     */
+    S3E_SOUNDPOOL_STREAM_STATUS     = 1,
+
+    /**
+     * [read] returns channel paused status.
+     * This is 1 if channel is paused, otherwise 0 (playing or stopped).
+     */
+    S3E_SOUNDPOOL_STREAM_PAUSED     = 2,
+};
+
+functions:
+
+/**
+ * Get a s3eSoundPoolProperty value.
+ */
+int32 s3eSoundPoolGetInt(s3eSoundPoolProperty property) -1
+
+/**
+ * Set a s3eSoundPoolProperty value.
+ */
+s3eResult s3eSoundPoolSetInt(s3eSoundPoolProperty property, int32 value) S3E_RESULT_ERROR
+
+/**
+ * Pause all currently playing streams.
+ */
+s3eResult s3eSoundPoolPauseAllSamples() S3E_RESULT_ERROR
+
+/**
+ * Resume all currently paused streams.
+ */
+s3eResult s3eSoundPoolResumeAllSamples() S3E_RESULT_ERROR
+
+/**
+ * Stop all currently playing or paused streams.
+ */
+s3eResult s3eSoundPoolStopAllSamples() S3E_RESULT_ERROR
+
+/**
+ * Load a sound sample from give path
+ * @return Identifer of sample or -1 on failure
+ */
+int32 s3eSoundPoolSampleLoad(const char* pPath) -1
+
+/**
+ * Stop and unload a sample.
+ */
+s3eResult s3eSoundPoolSampleUnload(int32 sampleId) S3E_RESULT_ERROR
+
+/**
+ * Play a previously loaded samlpe.
+ */
+s3eResult s3eSoundPoolSamplePlay(int32 sampleId, int32 repeat, int32 loopfrom) S3E_RESULT_ERROR
+
+/**
+ * Stop a currently playing or paused sample.
+ */
+s3eResult s3eSoundPoolSampleStop(int32 sampleId) S3E_RESULT_ERROR
+
+/**
+ * Pause a currently playing sample.
+ */
+s3eResult s3eSoundPoolSamplePause(int32 sampleId) S3E_RESULT_ERROR
+
+/**
+ * Resume a currently paused sample.
+ */
+s3eResult s3eSoundPoolSampleResume(int32 sampleId) S3E_RESULT_ERROR
+
+/**
+ * Get a s3eSoundPoolSampleProperty value for a particular sample.
+ */
+int32 s3eSoundPoolSampleGetInt(int32 sampleId, s3eSoundPoolSampleProperty property) -1
+
+/**
+ * Set a s3eSoundPoolSampleProperty value for a particular sample.
+ */
+s3eResult s3eSoundPoolSampleSetInt(int32 sampleId, s3eSoundPoolSampleProperty property, int32 value) S3E_RESULT_ERROR
+
+append:
