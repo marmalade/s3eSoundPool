@@ -1,2 +1,16 @@
 This source code is provided under the license included in the source header files.
 The EULA agreement referenced can be found at http://www.madewithmarmalade.com
+
+s3eSoundPool is a Marmalade extension for the Android SoundPool API. It allows for preloading of sound samples, which can help achieve low latency.
+
+s3eSoundPool's interface is similar to that of s3eSound's:
+
+- Sound samples must be preloaded with s3eSoundPoolSampleLoad before playing
+- Samples are played by ID using s3eSoundPoolSamplePlay
+- Samples can be paused and resumes with s3eSoundPoolSamplePause and s3eSoundPoolSampleResume, respectively
+- A callback to detect when samples have finished playing can be registered using s3eSoundPoolRegister
+- Sample state can be polled using s3eSoundPoolSampleGetInt
+
+Please see 's3eSoundPool.h' for more details.
+
+To use this extension in another project include 's3eSoundPool' in the subprojects section of the project's mkb file.
